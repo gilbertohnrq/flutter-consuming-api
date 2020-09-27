@@ -10,12 +10,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Aprendendo a usar Menu Drawer',
+      title: 'Aprendendo a usar Menu Drawer e requisições a API',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(text: "Hello World",),
+      home: MyHomePage(text: "First APP",),
     );
   }
 }

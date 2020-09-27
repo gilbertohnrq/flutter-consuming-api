@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controller/my_homepage_controller.dart';
+import 'package:flutter_app/model/user_model.dart';
+import 'package:flutter_app/page/user_details.dart';
+import 'package:flutter_app/repository/user_repository.dart';
 
 class MyHomePage extends StatefulWidget {
   final String text;
@@ -12,12 +16,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool icone = false;
+  MyHomePageController controller = new MyHomePageController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.deepPurple,
         title: Text(widget.text),
         centerTitle: true,
         actions: [],
@@ -80,15 +85,38 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(icone ? Icons.add : Icons.restaurant),
-        onPressed: () {
+        onPressed: () async {
           icone = !icone;
-
+          await controller.listarTodos();
           setState(() {});
         },
       ),
-      body: Container(
-        child: Text("Abre o menu ali <-"),
-      ),
+      body: FutureBuilder<List<UserModel>>(
+          future: controller.listarTodos(),
+          builder: (context, snapshot) {
+            List<UserModel> list = snapshot.data;
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(list[index].nome),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserDetails(user: list[index]),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          }),
     );
   }
 }
