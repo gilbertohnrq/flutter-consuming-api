@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controller/my_homepage_controller.dart';
 import 'package:flutter_app/model/user_model.dart';
+import 'package:flutter_app/page/add_user.dart';
 import 'package:flutter_app/page/user_details.dart';
 import 'package:flutter_app/repository/user_repository.dart';
 
@@ -84,11 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(icone ? Icons.add : Icons.restaurant),
-        onPressed: () async {
-          icone = !icone;
-          await controller.listarTodos();
-          setState(() {});
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddUser(),
+            ),
+          );
         },
       ),
       body: FutureBuilder<List<UserModel>>(
@@ -100,21 +104,36 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: CircularProgressIndicator(),
               );
             }
-            return ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(list[index].nome),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserDetails(user: list[index]),
-                      ),
-                    );
-                  },
-                );
+            return RefreshIndicator(
+              onRefresh: () async {
+                await controller.listarTodos();
+                setState(() {});
               },
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(list[index].nome),
+                    trailing: IconButton(
+                      onPressed: () async {
+                       await controller.deletarUser(list[index]);
+                        setState(() {
+
+                        });
+                      },
+                      icon: Icon(Icons.delete),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserDetails(user: list[index]),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             );
           }),
     );

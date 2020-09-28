@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controller/add_user_controller.dart';
 import 'package:flutter_app/model/user_model.dart';
 
 class UserDetails extends StatelessWidget {
   final UserModel user;
 
   const UserDetails({this.user});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

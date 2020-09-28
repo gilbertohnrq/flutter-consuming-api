@@ -7,4 +7,8 @@ class MyHomePageController {
   Future<List<UserModel>> listarTodos() async {
     return userRepository.listarTodos();
   }
+
+  Future<void> deletarUser(UserModel user) async {
+    await userRepository.deleteUser(user);
+  }
 }
